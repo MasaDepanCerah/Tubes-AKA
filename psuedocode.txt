@@ -1,0 +1,62 @@
+Iteratif
+
+function coinChangeIteratif(coins[0..k-1] : array of integer, n, k : integer) -> integer
+kamus
+    constant integer_max : integer = 1000000000
+    dp[0..n] : array of integer
+    i, j : integer
+algoritma
+    for i <- 0 to n do
+        dp[i] = integer_max
+    endfor
+    dp[0] = 0
+    for i <- 1 to n do
+        for j <- 0 to k-1 do
+            if i - coins[j] >= 0 then
+                if dp[n - coins[j]] + 1 < dp[i] then
+                    dp[i] <- dp[i - coins[j]] + 1
+                endif
+            endif
+        endfor
+    endfor
+    if dp[n] == integer_max then
+        return -1
+    else
+        return dp[n]
+    endif
+endprogram
+
+Rekursif
+
+function coinChangeRekursif(coins[0..k-1] : array of integer, n, k : integer) -> integer
+kamus
+    dp[0..n] : array of integer
+    i : integer
+algoritma
+    for i <- 0 to n do
+        dp[i] <- -1
+    endfor
+    return solve(coins, dp, k, n)
+endprogram
+
+function solve(coins[0..k-1] : array of integer, dp[0..n], k, n : integer) -> integer
+kamus
+    constant integer_max : integer = 1000000000
+    i, sub : integer
+algoritma
+    if n == 0 then
+        return 0
+    else if n < 0 then
+        return integer_max
+    else if dp[n] != -1 then
+        return dp[n]
+    endif
+    dp[n] <- integer_max
+    for i <- 0 to k-1 do
+        sub <- solve(coins, dp, k, n - coins[i])
+        if sub + 1 < dp[n] then
+            dp[n] <- sub + 1 
+        endif
+    endfor
+    return dp[n]
+endprogram
